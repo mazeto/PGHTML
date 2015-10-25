@@ -1,7 +1,7 @@
 
 /*
     Procedurally Generated HTML (PGHTML)
-    Copyright (C) 2015, Ricardo Mazeto.
+    Copyright (C) 2015, Ricardo Gonçalves Mazeto.
     
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
