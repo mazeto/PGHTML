@@ -2,25 +2,70 @@
 /*
     Procedurally Generated HTML (PGHTML)
     Copyright (C) 2015, Ricardo Gonçalves Mazeto.
-    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     at your option) any later version.
-    
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function pghtml(s){
+function pght
+ml(s){
+
+// temp function for debug
+function log(a){console.log(a)}
+// get last list element
+function last(a){return a[a.length-1]}
+// Test Regular Expression
+function test(a,b){return Ŕ(a).test(b)}
+// Execute Regular Expression
+function exec(a,b){return Ŕ(a).exec(b)}
+// has numbered elements?
+function num(a){return Ŕ(re.n).test(a)}
+// has tag?
+function tag(a){return Ŕ(re.t).test(a)}
+// has att ?
+function att(a){return Ŕ(re.a).test(a)}
+// has id ?
+function hid(a){return Ŕ(re.d).test(a)}
+// has class ?
+function cls(a){return Ŕ(re.c).test(a)}
+// has string ?
+function str(a){return Ŕ(re.s).test(a)}
+// has Object.Reference ?
+function ref(a){return Ŕ(re.o).test(a)}
+// get id
+function gId(a){return Ŕ(re.d).exec(a)[0].slice(1)}
+// get indentation
+function gInd(a){return Ŕ(re.i).exec(a)[0].length}
+// get number of elements
+function gNum(a){return Number.parseInt(Ŕ(re.n).exec(a)[0])}
+// get tag name
+function gTag(a){return Ŕ('[a-z]+[0-9]*').exec(Ŕ(re.t).exec(a)[0])[0]}
+// get attr
+function gAtt(a){return Ŕ(re.a).exec(a)[0].slice(a.indexOf('!')+1)}
+// get Class
+function gCls(a){c = Ŕ(re.c).exec(a)[0]; return c.slice(c.indexOf('.')+1).split('.')}
+// get Str
+function gStr(a){s = Ŕ(re.s).exec(a)[0]; return s.slice(s.indexOf("'")+1, s.length-1)}
+// get referenced object
+function gro(a){
+    r = Ŕ('[a-zA-Z.]+').exec(Ŕ(re.o).exec(a)[0])[0].split('.')
+    v = window[r[0]]
+    for(var i=1;i<r.length;i++){v=v[r[i]]}
+    
+    return v
+}
+
+    var Ŕ = RegExp
 
     /*RegExp string index*/
-    re = {
+    var re = {
         /*indentation*/
         i:'^[ ]*',
         /*number of elements*/
@@ -28,186 +73,189 @@ function pghtml(s){
         /*tag*/
         t:'^[ ]*([0-9]+)?[a-z0-9]+',
         /*attribute*/
-        a:'^[ ]*![a-zA-z]+:',
-        /*ID*/
+        a:'^[ ]*![a-zA-Z0-9-]+',
+        /*id*/
         d:'(#[a-zA-Z0-9_]+){1}',
         /*Class*/
-        c:'([.]{1}[a-zA-Z0-9_]+)+',
+        c:'^[ ]*[a-zA-Z0-9#]+([.]{1}[a-zA-Z0-9]+)+',
         /*string*/
         s:'[:]{1}[ ]*[\'\"]{1}.+[\'\"]{1}$',
         /*Object Reference*/
         o:'[:]{1}[ ]+[a-zA-Z0-9_.]+$',
     }
 
-    /*capture the time when the function was started.*/
-    startTime = Date.now()
-
-    /*toggles log on and off.*/
-    /*This script is filled with lns like this:*/
-    /*L ? log(thingToLog):0;*/
-    L = 1
-
     /*splited strings*/
-    SS = s.split('\n')
+    var Ŝ = Array.isArray(s)?s:s.split('\n')
 
-    /*DOM tree root to return*/
-    dom = document.createElement('div')
+    /*Box to store the DOM tree*/
+    var div = document.createElement('div')
 
-    /*cursor inside the DOM tree*/
-    /*the point where elements are appended*/
-    c = dom
+    // first time
+    if(!window['ĉẍ']){
+        var div = document.createElement('div')
+        var dbx = [div]
+        var ĉẍ = [last(dbx)]
+        var ṕí = [0]
+        var áí = [0]
+    }
 
-    /*previous indentation level*/
-    pil = 0
-    /*actual indentation level*/
-    ail = 0
+    // further times.
+    else{
+        dbx.push(document.createElement('div'))
+        ṕí.push(0)
+        áí.push(0)
+        ĉẍ.push(last(dbx))
+    }
 
     /*For each line in splited strings*/
-    for(ln=0;ln<SS.length;ln+=1){
-
-        L ? log("parsing string: "+ln):0
-        L ? log("string content: '"+SS[ln]+"'"):0
-
+    for(var Ï=0;Ï<Ŝ.length;Ï++){
+        var ï = Ŝ[Ï]
+        /*If numbered line has child elements*/
+        /*
+        if(RegExp(re.n).test(Ŝ[Ï])){
+            //child lines
+            chl = 0
+            //parent indentation
+            pi = RegExp(re.i).exec(Ŝ[Ï])[0].length
+            //counter
+            i = Ï;
+            for(i=i;Ï+i <= Ŝ.length;i++){
+                // indentation level
+                il = RegExp(re.i).exec(Ŝ[Ï+i])[0].length
+                // attribute?
+                a = RegExp(re.a).test(Ŝ[Ï+i])
+                // tag?
+                t = RegExp(re.t).test(Ŝ[Ï+i])
+                if(a){continue}
+                if(il > pi && t){chl++}
+                if(il <= pi && t){break}
+            }
+            if(chl>0){
+                // elements slice
+                es = Ŝ.slice(Ï, Ï+i);
+                chld = pghtml(es)
+                log(chld)
+                ĉẍ[ĉẍ.length-1].appendChild(chld)
+            }
+        }
+        */
         /*Attribute?*/
-        if(RegExp(re.a).test(SS[ln])){
-
-            /*feature to deploy!!!*/
-            /*last el is numbered ?*/
-            /*assign attr to multiple elements*/
-            /*assign multiple attr to single/multiple*/
-            /*
-            n = RegExp(re.n).test(SS[i-1] ? RegExp(re.n).test(SS[i-1]).slice(pli):1;
-            */
-            /*loop through each element*/
-            /*for(i=1;i<=n;i++){}*/
-            l = RegExp(re.a).exec(SS[ln])[0]
-            a = l.slice(ail+1, l.length-1)
-            L ? log("attribute name:'"+a+"'"):0
-
-            /*log string value*/
-            L ? log(RegExp(re.s).exec(SS[ln])):0
-            v = RegExp(re.s).exec(SS[ln])[0]
-            v = v.slice(v.indexOf("'")+1, v.length-1)
-            L ? log("value:'"+v+"'"):0
-            L ? log('setting attribute at element:'):0
-            L ? log(c.lastElementChild):0
-            c.lastElementChild.setAttribute(a, v)
-            L ? log('----------------------------------------'):0
-            continue
+        if(att(ï)){
+            /*get Attr name*/
+            var a = gAtt(ï)
+            /*set up the cursor*/
+            var e = last(ĉẍ).lastElementChild
+            /* attr = value */
+            if(str(ï)){
+                /*get string value*/
+                var v = gStr(ï)
+                /*loop through the number of elements to apply*/
+                for(var i=0;i<n;i++){
+                    e.setAttribute(a, v)
+                    e = e.previousElementSibling
+                }
+                continue
+            }
+            /* Attr = Obj.Ref */
+            if(ref(ï)){
+                v = gro(ï)
+                if(Array.isArray(v) && v.length == n){
+                    for(var i=n;i>0;i--){
+                        e.setAttribute(a, v[i-1])
+                        e = e.previousElementSibling
+                    }
+                }
+                continue
+            }
+            /* Attr */
+            else{e.setAttribute(a, '');continue}
         }
 
         /*if isn't att,*/
         /*it is a tag, then:*/
-
-        /*update previous indentation ln*/
-        /*before update the actual indentation ln*/
-        pil = ail
-        /*set actual indentation ln*/
-        ail = RegExp(re.i).exec(SS[ln])[0].length
-        L ? log("pil:'"+pil+"'"):0
-        L ? log("ail:'"+ail+"'"):0
-        if(ail>pil){
+        /*update previous indentation Ï*/
+        /*before update the actual indentation Ï*/
+        ṕí[ṕí.length-1] = last(áí)
+        /*set actual indentation Ï*/
+        áí[áí.length-1] = gInd(ï)
+        if(last(áí)>last(ṕí)){
             /*set cursor*/
-            c = c.lastElementChild
-
+            ĉẍ[ĉẍ.length-1] = last(ĉẍ).lastElementChild
             /*if the parentElement number > 1*/
             /*is bigger*/
         }
-        else if(ail<pil){
+        else if(last(áí)<last(ṕí)){
             /*if it is smaller,*/
             /*loop until it match*/
             /*the right tree level*/
-            for(diff=1;diff<=pil-ail;diff++){
-                c = c.parentElement
+            for(df=1;df<=last(ṕí)-last(áí);df++){
+                ĉẍ[ĉẍ.length-1] = last(ĉẍ).parentElement
             }
         }
 
-        L ? log('cursor:'):0
-        L ? log(c):0
+        var n = num(ï)?gNum(ï):tag(ï)?1:n
+        /* the line above is equivalent to:
+        if(num(ï)){
+            n = gNum(ï)
+        }
+        else{
+            if(tag(ï)){
+                n = 1
+            }
+            else{
+                n=n
+            }
+        }
+        */
 
         /*tag name*/
-        tn = RegExp(re.t).exec(SS[ln])[0]
-
-        /*remove indentation form the previous tn string*/
-        tn = RegExp('[a-z]+[0-9]*').exec(tn.slice(ail))
-
-        /*Set the number of tags to gen.*/
-        if(RegExp(re.n).test(SS[ln])){
-            n = RegExp(re.n).exec(SS[ln])[0].slice(ail)
-            L ? log("generating: "+n+" elements."):0
-        }else{n = 1}
+        var tn = gTag(ï)
 
         /*Elements Array.*/
-        ea = []
-        /*create a temporary DOM to store*/
-        /*the elements through this ln*/
-        for (i=0;i<n;i+=1){
-            L ? log(i):0
+        var ea = []
+
+        for (var i=0;i<n;i+=1){
             /*the following code bugs idk y*/
             /*this fix the problem:*/
             ea.push(document.createElement(tn))
         }
 
-        /*ID ?*/
-        if(RegExp(re.d).test(SS[ln])){
-            ID = RegExp(re.d).exec(SS[ln])[0].slice(1)
-            L ? log("Setting id: '"+ID+"'"):0
+        /*id ?*/
+        if(hid(ï)){
+            var id = gId(ï)
             if(n == 1){
-                L ? log("setting 1 id:"):0
-                ea[0].setAttribute('id', ID)
+                ea[0].setAttribute('id', id)
             }
             else{
                 for(o=1; o<=n; o++){
-                    L ? log("id pointer: '"+o+"'"):0
-                    ea[o-1].setAttribute('id',ID+"_"+o)
+                    ea[o-1].setAttribute('id',id+"_"+o)
                 }
             }
         }
 
         /*Class ?*/
-        if( RegExp(re.c).test(SS[ln]) ){
+        if(cls(ï)){
             /*classes list*/
-            cl = RegExp(re.c).exec(SS[ln])[0].split('.').slice(1)
-            L ? log("Setting class: '"+cl+"'"):0;               
+            var cl = gCls(ï)
             /*loop through N*/
-            for(i=0;i<n;i+=1){
-                for(classindex=1;classindex<cl.length;classindex++){
-                    ea[i].classList.add(cl[classindex])
+            for(var i=0;i<n;i+=1){
+                for(var ç=0;ç<cl.length;ç++){
+                    ea[i].classList.add(cl[ç])
                 }
             }
         }
 
         /*it has a string ?*/
-        if(RegExp(re.s).test(SS[ln])){
-            L ? log('inserting string'):0
-            s = RegExp(re.s).exec(SS[ln])[0]
-            L ? log("re.s:'"+s+"'"):0
-
-            /*remove the ' from the end*/
-
-            /*and beggining of the string*/
-            s = s.slice(s.indexOf("'")+1, s.length-1)
-            L ? log("sliced:'"+s+"'"):0
-            for(o=1;o<=n;o++){
-                ea[o-1].innerHTML = s
+        if(str(ï)){
+            var s = gStr(ï)
+            for(var i=1;i<=n;i++){
+                ea[i-1].innerHTML = s
             }
         }
 
         /* Obj.Ref ? */
-        if(RegExp(re.o).test(SS[ln])){
-
-            /*object reference*/
-            or = RegExp(re.o).exec(SS[ln])
-            or = RegExp('[a-zA-Z.]+').exec(or)[0].split('.')
-            /*value*/
-            v = window[or[0]]
-            L ? log(or):0
-
-            for(ob=1;ob<or.length;ob++){
-                L ? log(or[ob]):0
-                v = v[or[ob]]
-            }
-
+        if(ref(ï)){
+            var v = gro(Ŝ[Ï])
             // elements number match with obj ref?
             if(n == v.length && Array.isArray(v)){
                 for(i=0;i<n;i++){
@@ -215,15 +263,19 @@ function pghtml(s){
                 }
             }
         }
-        for(i=0;i<ea.length;i++){
-            L ? log("Appending i:'"+i+"'"):0
-            c.appendChild(ea[i])
-        }
 
-        /*c.appendChild(e)*/
-        L ? log('----------------------------------------'):0
+        for(var i=0;i<ea.length;i++){
+            last(ĉẍ).appendChild(ea[i])
+        }
     }
-    finishTime = Date.now()
-    log("Finished in " + (finishTime - startTime)/1000 + "s")
-    return dom
+    var ret = last(dbx)
+    /*if the returned DOM tree has just one child element,
+    return it instead of return the whole element wrapper.
+    */
+    ret = ret.children.length==1?ret.children[0]:ret
+    dbx.pop()
+    ĉẍ.pop()
+    ṕí.pop()
+    áí.pop()
+    return ret
 }
