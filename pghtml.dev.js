@@ -14,8 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-function pght
-ml(s){
+function pghtml(s){
 
 // temp function for debug
 function log(a){console.log(a)}
@@ -193,6 +192,7 @@ function gro(a){
             }
         }
 
+        /*Number of tags to generate*/
         var n = num(ï)?gNum(ï):tag(ï)?1:n
         /* the line above is equivalent to:
         if(num(ï)){

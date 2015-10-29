@@ -7,7 +7,7 @@ Pghtml is a micro framework (<1kb minified and gzipped) containing a single func
 
     div#idName.className
     !meta: 'data'
-     10div#id.another.class_a.class_b: obj.ref
+     10div#id.class_a.class_b: obj.ref
     p: 'string'
 
 Escaped like that:
@@ -36,21 +36,25 @@ This can be useful in cases of websites that has markup patterns that repeats it
 
 That string is a description of the html structure based on the YAML key=value syntax. 
 
-    [_][n]el[#id][.class][:"string" || obj.ref]
+    [_][n]el[#id][.class][: ["string" || obj.ref] ]
+     ┃  ┃ ┃   ┃      ┃    ┃     ┃           ┃
+     ┃  ┃ ┃   ┃      ┃    ┃     ┃           ┗ Object.reference*
+     ┃  ┃ ┃   ┃      ┃    ┃     ┗ String*
+     ┃  ┃ ┃   ┃      ┃    ┗ Comma*
+     ┃  ┃ ┃   ┃      ┗ class(es)*
+     ┃  ┃ ┃   ┗ id*
+     ┃  ┃ ┗ ElementName
+     ┃  ┗ Number*
+     ┗ Indentation*
 
-where:
-
-_ = indentation
-n = number of elements
-el = element name
+     *optional
+     (The comma isn't optional if there's a string or obj.ref)
 
 If a line contains a 'key=value', the value can be a object reference. If the object is an array and matches the number of elements, each item on the list is applied as inner html to each element.
 
 Attributes are applied to the last valid element line above:
 
     !attribute: "string"
-
-The ':' is optional if the string doesn't contains inner html.
 
 If you're using Sublime Text, the package [StringEncode](https://packagecontrol.io/packages/StringEncode) deals with escape and unescaping JSON strings.
 
